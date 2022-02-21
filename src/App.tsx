@@ -1,22 +1,21 @@
-import styled, { ThemeProvider } from 'styled-components';
-import { m } from 'styled-components-spacing';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { ThemeProvider } from 'styled-components';
 
+import Assets from 'pages/Assets';
+import queryClient from 'services/queryClient';
 import GlobalStyle from 'styles/global';
 import theme from 'styles/theme';
 
-const Root = styled.div`
-  color: red;
-  ${m(4)}
-`;
-
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <Root>
-        App
-      </Root>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Assets />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 
