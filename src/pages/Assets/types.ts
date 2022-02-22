@@ -10,8 +10,10 @@ export interface IAsset {
   id: number;
   token_id: string;
   name: string;
-  permalink: string;
+  description: string;
   image_preview_url: string;
+  permalink: string;
+  last_sale: string;
   owner: IUser;
   creator: IUser;
   [x: string]: any;
