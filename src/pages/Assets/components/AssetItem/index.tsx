@@ -35,6 +35,18 @@ const Info = styled.div`
   ${px(1)}
 `;
 
+const ExternalLink = styled.a<{ isLinked: boolean }>`
+  cursor: ${({ isLinked }) => isLinked ? 'pointer' : 'default'};
+  color: ${({ theme }) => theme.colors.black};
+  &:hover {
+  color: ${({ theme, isLinked }) => (
+    isLinked
+      ? theme.colors.primary
+      : theme.colors.black
+  )}
+  }
+`;
+
 const StyledImg = styled(Img)`
   width: 100%;
   height: 100%;
@@ -48,19 +60,26 @@ const AssetItem = ({
 }: AssetItemProps) => (
   <Root>
     <Thumbnail>
+    <ExternalLink
+      href={asset.permalink}
+      target="_blank"
+      rel="noopener noreferrer"
+      isLinked={!!asset.external_link}
+    >
       <Square>
         <StyledImg
           src={asset.image_preview_url}
           width="100%"
         />
-        </Square>
+      </Square>
+    </ExternalLink>
     </Thumbnail>
     <Info>
       <Text
         color="primary"
         size="s"
       >
-        {`${asset.creator.user?.username || 'Unknown'}`}
+        {`${asset.creator?.user?.username || 'Unknown'}`}
       </Text>
       <Margin top={0.5}>
         <TextLineClamp>

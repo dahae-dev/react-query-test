@@ -1,6 +1,8 @@
+import { Fragment } from 'react';
 import styled from 'styled-components';
 import { px, py } from 'styled-components-spacing';
 
+import Button from 'components/Button';
 import Card from 'components/Card';
 
 import AssetItem from './components/AssetItem';
@@ -13,43 +15,80 @@ const Root = styled.div`
   ${py(2)}
 `;
 
-const ExternalLink = styled.a<{ isLinked: boolean }>`
-  cursor: ${({ isLinked }) => isLinked ? 'pointer' : 'default'};
-  color: ${({ theme }) => theme.colors.black};
-  &:hover {
-  color: ${({ theme, isLinked }) => (
-    isLinked
-      ? theme.colors.primary
-      : theme.colors.black
-  )}
-  }
+const Center = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Wrapper = styled.div`
+  text-align: center;
+  ${py(2)}
 `;
 
 const Assets = () => {
-  const { data, isLoading } = useAssets();
-  const { assets = [] } = data || {};
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = useAssets();
+  const { pages = [] } = data || {};
+
+  if (isLoading) {
+    return <Center>Loading...</Center>;
+  }
+
+  if (isError) {
+    return <Center>Unexpected Error</Center>;
+  }
+
   return (
     <Root>
       {
-        isLoading
-          ? 'Loading...'
-          : assets
-            .filter(asset => asset.name || asset.image_preview_url)
-            .map((asset) => (
-              <Card key={asset.id}>
-                <ExternalLink
-                  href={asset.permalink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  isLinked={!!asset.external_link}
-                >
-                  <AssetItem
-                    asset={asset}
-                  />
-                </ExternalLink>
-              </Card>
-            ))
+        pages.map((page, i) => (
+          <Fragment key={i}>
+            {
+              page.assets
+                .filter(asset => asset.name || asset.image_preview_url)
+                .map((asset) => (
+                  <Card key={asset.id}>
+                    <AssetItem
+                      asset={asset}
+                    />
+                  </Card>
+                ))
+            }
+          </Fragment>
+        ))
       }
+      <Wrapper>
+        <Button
+          outlined
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {
+            isFetchingNextPage
+              ? 'Loading more...'
+              : hasNextPage
+                ? 'Load More'
+                : 'Nothing more to load'
+          }
+         </Button>
+       </Wrapper>
+      <Wrapper>
+        {
+          (isFetching && !isFetchingNextPage)
+            ? 'Fetching...'
+            : null
+        }
+      </Wrapper>
     </Root>
   );
 };
