@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Margin, py, px } from 'styled-components-spacing';
 
@@ -6,11 +7,10 @@ import Square from 'components/Square';
 import Text from 'components/Text';
 import TextLineClamp from 'components/TextLineClamp';
 import Time from 'components/Time';
-
-import { IAsset } from '../../types';
+import { IAsset } from 'types/model';
 
 interface AssetItemProps {
-  asset: IAsset
+  asset: IAsset;
 }
 
 const defaultProps: Partial<AssetItemProps> = {};
@@ -35,18 +35,6 @@ const Info = styled.div`
   ${px(1)}
 `;
 
-const ExternalLink = styled.a<{ isLinked: boolean }>`
-  cursor: ${({ isLinked }) => isLinked ? 'pointer' : 'default'};
-  color: ${({ theme }) => theme.colors.black};
-  &:hover {
-  color: ${({ theme, isLinked }) => (
-    isLinked
-      ? theme.colors.primary
-      : theme.colors.black
-  )}
-  }
-`;
-
 const StyledImg = styled(Img)`
   width: 100%;
   height: 100%;
@@ -60,19 +48,16 @@ const AssetItem = ({
 }: AssetItemProps) => (
   <Root>
     <Thumbnail>
-    <ExternalLink
-      href={asset.permalink}
-      target="_blank"
-      rel="noopener noreferrer"
-      isLinked={!!asset.external_link}
-    >
+      <Link
+        to={`/assets/${asset.asset_contract.address}/${asset.token_id}`}
+      >
       <Square>
         <StyledImg
           src={asset.image_preview_url}
           width="100%"
         />
       </Square>
-    </ExternalLink>
+    </Link>
     </Thumbnail>
     <Info>
       <Text

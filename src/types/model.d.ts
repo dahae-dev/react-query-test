@@ -6,9 +6,15 @@ export interface IUser {
   config?: string;
 }
 
+export interface IAssetContract {
+  address: string;
+  [x: string]: any;
+}
+
 export interface IAsset {
   id: number;
   token_id: string;
+  asset_contract: IAssetContract;
   name: string;
   description: string;
   image_preview_url: string;
@@ -17,10 +23,4 @@ export interface IAsset {
   owner: IUser;
   creator: IUser;
   [x: string]: any;
-}
-
-export interface IResult {
-  assets: Array<IAsset>;
-  next: string | null;
-  previous: string | null;
 }

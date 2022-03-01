@@ -1,21 +1,23 @@
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { ThemeProvider } from 'styled-components';
+import { useEffect } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
+import Asset from 'pages/Asset';
 import Assets from 'pages/Assets';
-import queryClient from 'services/queryClient';
-import GlobalStyle from 'styles/global';
-import theme from 'styles/theme';
 
 const App = () => {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (pathname === '/') {
+      navigate('/assets');
+    }
+  }, []);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <Assets />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <Routes>
+      <Route path="/assets/:assetContractAddress/:tokenId" element={<Asset />}/>
+      <Route path="/assets" element={<Assets />} />
+    </Routes>
   );
 };
 
