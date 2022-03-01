@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
+import React, { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { py, px } from 'styled-components-spacing';
 
@@ -19,18 +19,22 @@ const Root = styled.button<ButtonProps>`
   `}
 `;
 
-const Button = ({
-  outlined = false,
-  children,
-  ...props
-}: PropsWithChildren<ButtonProps>) => (
+const Button = React.forwardRef<HTMLButtonElement, PropsWithChildren<ButtonProps>>((
+  {
+    outlined = false,
+    children,
+    ...props
+  },
+  ref,
+) => (
   <Root
+    ref={ref}
     outlined={outlined}
     {...props}
   >
     {children}
   </Root>
-);
+));
 
 export default Button;
 export type {

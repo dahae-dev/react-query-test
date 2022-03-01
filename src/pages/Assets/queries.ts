@@ -11,11 +11,7 @@ const getAssets = async ({ pageParam = '' }): Promise<IResult> => {
 
 const useAssets = () => {
   return useInfiniteQuery('Assets', getAssets, {
-    getNextPageParam: (lastPage) => {
-      const url = new URL(lastPage.next || '');
-      const params = new URLSearchParams(url.search);
-      return params.get('cursor');
-    },
+    getNextPageParam: (lastPage) => lastPage.next,
   });
 };
 

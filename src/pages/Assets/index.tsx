@@ -1,9 +1,10 @@
-import { Fragment } from 'react';
+import { Fragment, useRef } from 'react';
 import styled from 'styled-components';
 import { px, py } from 'styled-components-spacing';
 
 import Button from 'components/Button';
 import Card from 'components/Card';
+import useIntersectionObservser from 'hooks/useIntersectionObserver';
 
 import AssetItem from './components/AssetItem';
 import { useAssets } from './queries';
@@ -40,6 +41,13 @@ const Assets = () => {
   } = useAssets();
   const { pages = [] } = data || {};
 
+  const loadMoreButtonRef = useRef<HTMLButtonElement>(null);
+  useIntersectionObservser({
+    target: loadMoreButtonRef,
+    onIntersect: fetchNextPage,
+    enabled: !!hasNextPage,
+  });
+
   if (isLoading) {
     return <Center>Loading...</Center>;
   }
@@ -69,9 +77,10 @@ const Assets = () => {
       }
       <Wrapper>
         <Button
-          outlined
+          ref={loadMoreButtonRef}
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
+          outlined
         >
           {
             isFetchingNextPage
